@@ -1,0 +1,60 @@
+# 日志打印级别
+logging:
+  level:
+    root: info
+# mybatis
+mybatis:
+  mapper-locations: classpath:mapper/*Mapper.xml
+spring:
+  shardingsphere:
+    # 运行模式类型。可选配置：Memory、Standalone、Cluster
+    mode:
+      type: Memory
+    database:
+      name: hrms-test
+    props:
+      sql-show: true
+    datasource:
+      names: hrms-test
+      # hrms-test
+      hrms-test:
+        url: jdbc:mysql://127.0.0.1:3306/hrms_test?useUnicode=true&serverTimezone=Asia/Shanghai&characterEncoding=UTF-8&useSSL=false&connectTimeout=30000&socketTimeout=60000
+        username: dml
+        password: T76yP8jpJGLW9BrBEJd6fYERO9Zrx6gPb534DWAMhLnivphIDsgLOg5bmep6SaWYNLngnDy154bLKLlzv+NM4A==
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        type: com.alibaba.druid.pool.DruidDataSource
+        initialSize: 5
+        minIdle: 10
+        maxActive: 50
+        maxWait: 60000
+        timeBetweenEvictionRunsMillis: 60000
+        minEvictableIdleTimeMillis: 300000
+        validationQuery: SELECT 'x'
+        testWhileIdle: true
+        testOnBorrow: false
+        testOnReturn: false
+        poolPreparedStatements: false
+        maxPoolPreparedStatementPerConnectionSize: 20
+        removeAbandoned: true
+        removeAbandonedTimeout: 1800
+        logAbandoned: true
+        filters: config,stat,wall
+        publickey: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJlMoFlQNur/osTA89hkHiw1c8rIES/Q+u0PbAZGZWCAS9Im5RdqXDd2YiIQROOmryiEXwlYclZp6McDrVjGLhsCAwEAAQ==
+        connectionProperties: config.decrypt=true;config.decrypt.key=${spring.shardingsphere.datasource.hrms-test.publickey};druid.stat.mergeSql=true;druid.stat.slowSqlMillis=10000
+    rules:
+      sharding:
+        tables:
+          person:
+            actual-data-nodes: hrms-test.person_$->{0..1}
+            # 分表策略可以使用内置算法或自定义
+            table-strategy:
+              standard:
+                #分表键需为数字类型
+                sharding-column: id
+                sharding-algorithm-name: table-mod
+        # 分表
+        sharding-algorithms:
+          table-mod:
+            type: MOD
+            props:
+              sharding-count: 2

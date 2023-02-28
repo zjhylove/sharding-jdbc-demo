@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2022, 北京中体彩运营管理公司  All rights reserved.
+  -->
+
+<!-- spring.application.name要在bootstrap.yml中定义-->
+<configuration debug="false">
+    <property name="log.dir" value="./log"/>
+
+    <!-- console -->
+    <appender name="consoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+        <target>System.out</target>
+        <encoder charset="UTF-8">
+            <pattern>%d [%thread] %-5p [%c] [%F:%L] [httpId=%X{x-lottery-http-id}] [traceId=%X{traceId}] - %message%n
+            </pattern>
+        </encoder>
+    </appender>
+    <appender name="asyncConsoleAppender" class="ch.qos.logback.classic.AsyncAppender">
+        <discardingThreshold>0</discardingThreshold>
+        <queueSize>512</queueSize>
+        <includeCallerData>true</includeCallerData>
+        <appender-ref ref="consoleAppender"/>
+    </appender>
+    <!-- console end-->
+
+    <root>
+        <level value="info"/>
+        <appender-ref ref="asyncConsoleAppender"/>
+    </root>
+
+</configuration>

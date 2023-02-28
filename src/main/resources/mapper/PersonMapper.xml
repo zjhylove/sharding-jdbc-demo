@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hrms.demo.mapper.PersonMapper">
+
+    <resultMap id="BaseResultMap" type="com.hrms.demo.po.PersonPO">
+        <id property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="age" column="age" jdbcType="INTEGER"/>
+        <result property="gender" column="gender" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,name,age,gender
+    </sql>
+
+    <!-- 通过id查询人物信息-->
+    <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from person
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <!-- 新增人物信息-->
+    <insert id="insert" parameterType="com.hrms.demo.po.PersonPO">
+        insert into person (<include refid="Base_Column_List"/>)
+        values (
+        #{id,jdbcType=VARCHAR},
+        #{name,jdbcType=VARCHAR},
+        #{age,jdbcType=INTEGER},
+        #{gender,jdbcType=INTEGER}
+        )
+    </insert>
+
+</mapper>

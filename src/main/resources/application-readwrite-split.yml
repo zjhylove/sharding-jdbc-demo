@@ -1,0 +1,89 @@
+# 日志打印级别
+logging:
+  level:
+    root: info
+# mybatis
+mybatis:
+  mapper-locations: classpath:mapper/*Mapper.xml
+spring:
+  shardingsphere:
+    # 运行模式类型。可选配置：Memory、Standalone、Cluster
+    mode:
+      type: Memory
+    database:
+      name: hrms-test
+    props:
+      sql-show: true
+    datasource:
+      names: hrms-test-read,hrms-test-write
+      # 读库
+      hrms-test-read:
+        url: jdbc:mysql://127.0.0.1:3306/hrms_test?useUnicode=true&serverTimezone=Asia/Shanghai&characterEncoding=UTF-8&useSSL=false&connectTimeout=30000&socketTimeout=60000
+        username: dml
+        password: T76yP8jpJGLW9BrBEJd6fYERO9Zrx6gPb534DWAMhLnivphIDsgLOg5bmep6SaWYNLngnDy154bLKLlzv+NM4A==
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        type: com.alibaba.druid.pool.DruidDataSource
+        initialSize: 5
+        minIdle: 10
+        maxActive: 50
+        maxWait: 60000
+        timeBetweenEvictionRunsMillis: 60000
+        minEvictableIdleTimeMillis: 300000
+        validationQuery: SELECT 'x'
+        testWhileIdle: true
+        testOnBorrow: false
+        testOnReturn: false
+        poolPreparedStatements: false
+        maxPoolPreparedStatementPerConnectionSize: 20
+        removeAbandoned: true
+        removeAbandonedTimeout: 1800
+        logAbandoned: true
+        filters: config,stat,wall
+        publickey: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJlMoFlQNur/osTA89hkHiw1c8rIES/Q+u0PbAZGZWCAS9Im5RdqXDd2YiIQROOmryiEXwlYclZp6McDrVjGLhsCAwEAAQ==
+        connectionProperties: config.decrypt=true;config.decrypt.key=${spring.shardingsphere.datasource.hrms-test-read.publickey};druid.stat.mergeSql=true;druid.stat.slowSqlMillis=10000
+      # 写库
+      hrms-test-write:
+        url: jdbc:mysql://127.0.0.1:3306/hrms_test?useUnicode=true&serverTimezone=Asia/Shanghai&characterEncoding=UTF-8&useSSL=false&connectTimeout=30000&socketTimeout=60000
+        username: dml
+        password: T76yP8jpJGLW9BrBEJd6fYERO9Zrx6gPb534DWAMhLnivphIDsgLOg5bmep6SaWYNLngnDy154bLKLlzv+NM4A==
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        type: com.alibaba.druid.pool.DruidDataSource
+        initialSize: 5
+        minIdle: 10
+        maxActive: 50
+        maxWait: 60000
+        timeBetweenEvictionRunsMillis: 60000
+        minEvictableIdleTimeMillis: 300000
+        validationQuery: SELECT 'x'
+        testWhileIdle: true
+        testOnBorrow: false
+        testOnReturn: false
+        poolPreparedStatements: false
+        maxPoolPreparedStatementPerConnectionSize: 20
+        removeAbandoned: true
+        removeAbandonedTimeout: 1800
+        logAbandoned: true
+        filters: config,stat,wall
+        publickey: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJlMoFlQNur/osTA89hkHiw1c8rIES/Q+u0PbAZGZWCAS9Im5RdqXDd2YiIQROOmryiEXwlYclZp6McDrVjGLhsCAwEAAQ==
+        connectionProperties: config.decrypt=true;config.decrypt.key=${spring.shardingsphere.datasource.hrms-test-write.publickey};druid.stat.mergeSql=true;druid.stat.slowSqlMillis=10000
+    rules:
+      # 读写分离配置  org.apache.shardingsphere.readwritesplitting.spring.boot.ReadwriteSplittingRuleSpringbootConfiguration
+      readwrite-splitting:
+        dataSources:
+          #读写分离逻辑数据源名称
+          hrms-test:
+            #读写分离类型（静态读写分离）
+            type: Static
+            props:
+              # 读数据源名称 只支持一个写库
+              write-data-source-name: hrms-test-write
+              # 写数据源名称 多个以逗号分隔
+              read-data-source-names: hrms-test-read
+            # 负载均衡名称
+            load-balancer-name: alg_round
+        load-balancers:
+          # 负载均衡算法名称 org.apache.shardingsphere.readwritesplitting.spi.ReadQueryLoadBalanceAlgorithm
+          alg_round:
+            type: RANDOM
+            props:
+              hrms-test-read: 1.0
