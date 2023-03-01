@@ -50,7 +50,7 @@ public class ConsistentHashTest {
         List<String> idList = Lists.newArrayList("10bd42c6-abcd-4e05-9418-6d1621d38412", "97ee8d76-5c53-4a02-87a4-72d32ad1be40", "2e4d9bf0-5d32-4dbd-ade8-de8d6ba7d443", "9e95a1be-9a31-4295-86fd-beb3fd1169d8", "40a4a364-23a4-48d8-acee-ab0b446e4e64", "87c8e694-7ce2-460a-8ee7-c07929377f76", "930bf083-564e-4f03-ad7a-9a404dff55ff", "3e78b94b-4127-4d63-bf37-d03ef81b0ca1", "f32411d9-0790-4b48-b623-c6b5322813d6", "31184530-d6aa-495a-8e48-e798604c4eb5");
         AtomicInteger buckets = new AtomicInteger(3);
         System.out.println("初始映射关系");
-        Function<String, Integer> function = f -> Hashing.consistentHash(f.hashCode(), buckets.incrementAndGet());
+        Function<String, Integer> function = f -> Hashing.consistentHash(f.hashCode(), buckets.get());
         formatPrint(idList, function);
         // 新增一个物理节点
         buckets.incrementAndGet();
